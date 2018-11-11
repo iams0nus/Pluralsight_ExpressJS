@@ -3,6 +3,10 @@ const chalk = require('chalk');
 const debug = require('debug')('app'); // set DEBUG=app & node app.js -- run this command to enable debug mode
 const morgan = require('morgan'); // gives us details of the requests to the server
 const path = require('path'); // gives us functions to join paths
+const bodyParser = require('body-parser');
+const passport = require('passport');
+const cookieParser = require('cookie-parser');
+const expressSession = require('express-session');
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -18,8 +22,16 @@ const nav = [{
 ];
 const bookRouter = require('./src/routes/bookRoutes')(nav);
 const adminRouter = require('./src/routes/adminRoutes')(nav);
+const authRouter = require('./src/routes/authRoutes')(nav);
 
-app.use(morgan('tiny')); // only status code
+app.use(morgan('tiny')); // only status code in console
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(expressSession({ secret: 'library' }));
+
+require('./src/config/passport.js')(app);
+
 app.use(express.static(path.join(__dirname, 'public'))); // serves static content inside public folder
 app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css'))); // fallback folder for static content
 app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')));
@@ -29,6 +41,7 @@ app.set('view engine', 'ejs');
 
 app.use('/books', bookRouter);
 app.use('/admin', adminRouter);
+app.use('/auth', authRouter);
 
 app.get('/', (req, res) => {
   // res.sendFile(path.join(__dirname, 'views', 'index.html'));// send the html file
