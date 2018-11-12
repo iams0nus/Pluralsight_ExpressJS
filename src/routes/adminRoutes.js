@@ -97,7 +97,7 @@ const books = [
 ];
 function router(nav) {
   adminRouter.route('/')
-    .get((req, res) => {
+    .get((req, res) => { // call this to populate data to db
       const url = 'mongodb://localhost:27017';
       const dbName = 'libraryApp';
 

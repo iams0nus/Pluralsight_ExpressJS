@@ -1,11 +1,13 @@
-const { MongoClient, ObjectID } = require('mongodb');
+const { MongoClient, ObjectID } = require('mongodb');// use MOngoClient for connection to mongo, ObjectId for MongoID
 const debug = require('debug')('app:bookRoutes');
 
-function bookController(bookService, nav) {
+function bookController(bookService, nav) { // declare controller that contains the fuctions
+  // and return the object
   function getAllBooks(req, res) {
     const url = 'mongodb://localhost:27017';
     const dbName = 'libraryApp';
 
+    // ((){}()) async IIFE , await all operations
     (async function mongo() {
       let client;
       try {
@@ -32,7 +34,7 @@ function bookController(bookService, nav) {
   function getBooksById(req, res) {
     const {
       id
-    } = req.params;
+    } = req.params;// id is stored in params
     const url = 'mongodb://localhost:27017';
     const dbName = 'libraryApp';
     (async function mongo() {
@@ -58,9 +60,9 @@ function bookController(bookService, nav) {
       client.close();
     }());
   }
-  function middleware(req, res, next) {
+  function middleware(req, res, next) { // accepts request, response and next objects
     if (req.user) {
-      next();
+      next();// move control to next operation in pipe i.e get section or post section
     } else {
       res.redirect('/');
     }

@@ -3,10 +3,10 @@ const chalk = require('chalk');
 const debug = require('debug')('app'); // set DEBUG=app & node app.js -- run this command to enable debug mode
 const morgan = require('morgan'); // gives us details of the requests to the server
 const path = require('path'); // gives us functions to join paths
-const bodyParser = require('body-parser');
-const passport = require('passport');
+const bodyParser = require('body-parser'); // parses body of post requests and puts into req.body
+const passport = require('passport'); // used for login and logout
 const cookieParser = require('cookie-parser');
-const expressSession = require('express-session');
+const expressSession = require('express-session');// used to store session data
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -25,10 +25,10 @@ const adminRouter = require('./src/routes/adminRoutes')(nav);
 const authRouter = require('./src/routes/authRoutes')(nav);
 
 app.use(morgan('tiny')); // only status code in console
-app.use(bodyParser.json());
+app.use(bodyParser.json()); // use body parser
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(expressSession({ secret: 'library' }));
+app.use(cookieParser()); // use cookie parser
+app.use(expressSession({ secret: 'library' })); // use express session
 
 require('./src/config/passport.js')(app);
 
